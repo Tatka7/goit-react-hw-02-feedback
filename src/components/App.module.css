@@ -1,0 +1,8 @@
+.conteiner {
+  background-color: #0d4063;
+  border: 1px solid #061f30;
+  border-radius: 20px;
+  box-shadow: 0 5px 10px 0 #05314ee0;
+  margin: 50px auto;
+  width: 700px;
+}
