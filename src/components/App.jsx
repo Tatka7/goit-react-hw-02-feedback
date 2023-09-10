@@ -12,26 +12,28 @@ export class App extends Component {
     bad: 0,
   };
 
-  addFeedback = evt => {
-    const name = evt.target.name;
+  addFeedback = name => {
     this.setState(prevState => ({
       [name]: prevState[name] + 1,
     }));
   };
 
-  countTotalFeedback = state => {
-    const valuesArr = Object.values(state);
+  countTotalFeedback = () => {
+    const valuesArr = Object.values(this.state);
     return valuesArr.reduce((previousValue, elem) => previousValue + elem, 0);
   };
-  countPositiveFeedbackPercentage(data) {
-    return Math.round(data * 100);
+
+  countPositiveFeedbackPercentage() {
+    const totalFeedback = this.countTotalFeedback();
+    const count = this.state.good / totalFeedback;
+    return Math.round(count * 100);
   }
 
   render() {
-    const state = this.state;
-    const totalFeedback = this.countTotalFeedback(state);
-    const count = state.good / totalFeedback;
-    const positivePercentage = this.countPositiveFeedbackPercentage(count);
+    const { good, neutral, bad } = this.state;
+    // const totalFeedback = this.countTotalFeedback(state);
+    // const count = state.good / totalFeedback;
+    const positivePercentage = this.countPositiveFeedbackPercentage();
 
     return (
       <div
@@ -47,17 +49,20 @@ export class App extends Component {
         }}
       >
         <Section title="Please leave feedback">
-          <FeedbackOptions options={state} onLeaveFeedback={this.addFeedback} />
+          <FeedbackOptions
+            options={this.state}
+            onLeaveFeedback={this.addFeedback}
+          />
         </Section>
         <Section title="Statistics">
-          {totalFeedback === 0 ? (
+          {this.countTotalFeedback() === 0 ? (
             <Notification message="There is no feedback" />
           ) : (
             <Statistics
-              good={state.good}
-              neutral={state.neutral}
-              bad={state.bad}
-              total={totalFeedback}
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={this.countTotalFeedback()}
               positivePercentage={positivePercentage}
             />
           )}
